@@ -9,7 +9,7 @@ class TagCloud
   end
 
   def tags
-     unless @tags
+    unless @tags
       params = [sql(@cut_off), user.id]
       if @cut_off
         params += [@cut_off, @cut_off]
@@ -19,15 +19,20 @@ class TagCloud
     @tags
   end
 
+
   def min
     0
   end
 
-  def divisor
-    @divisor ||= ((max - min) / levels) + 1
+  def relative_size(tag)
+    (tag.count.to_i - min) / divisor
   end
 
   private
+
+  def min
+    0
+  end
 
   def max
     tag_counts.max
@@ -35,10 +40,6 @@ class TagCloud
 
   def tag_counts
    @tag_counts ||= tags.map {|t| t.count.to_i}
-  end
-
-  def levels
-    10
   end
 
   # TODO: parameterize limit
@@ -56,5 +57,9 @@ class TagCloud
     query << " GROUP BY tags.id, tags.name"
     query << " ORDER BY count DESC, name"
     query << " LIMIT 100"
+  end
+
+  def levels
+    10
   end
 end
