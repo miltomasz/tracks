@@ -19,7 +19,6 @@ class TagCloud
     @tags
   end
 
-
   def min
     0
   end
@@ -28,11 +27,11 @@ class TagCloud
     (tag.count.to_i - min) / divisor
   end
 
-  private
-
-  def min
-    0
+  def divisor
+    @divisor ||= ((max - min) / levels) + 1
   end
+
+  private
 
   def max
     tag_counts.max
